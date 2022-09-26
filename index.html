@@ -13,13 +13,15 @@
     <script>
       let ballX = 400;
       let ballY = 300;
-      let ballSpeedX = 5;
-      let ballSpeedY = 5;
-      const PADDLE_WIDTH = 80;
+      let ballSpeedX = 15;
+      let ballSpeedY = 15;
+      const PADDLE_WIDTH = 90;
       const PADDLE_THICKNESS = 10;
       let paddleX = 360;
-      let paddleY = 600 - 40;
+      // let paddleY = 600 - 40;
       let canvas, canvasContext;
+      let PADDLE_DIST_FROM_EDGE = 60;
+
 
       function calculateMousePos(e) {
         const rect = canvas.getBoundingClientRect();
@@ -62,16 +64,31 @@
         // IF BALL GOES BEYOND LEFT/RIGHT BORDER, REVERSE DIRECTION
         if (ballX > canvas.width || ballX < 0) {
           ballSpeedX = -ballSpeedX;
-        }
+        };
         // IF BALL GOES BEYOND UP/DOWN BORDER, RESET
         if (ballY > canvas.height || ballY < 0) {
             ballReset();
+        };
+
+        const paddleTopEdgeY = canvas.height - PADDLE_DIST_FROM_EDGE;
+        const paddleBottomEdgeY = paddleTopEdgeY + PADDLE_THICKNESS;
+        const paddleLeftEdgeX = paddleX;
+        const paddleRightEdgeX = paddleLeftEdgeX + PADDLE_WIDTH;
+
+        if (
+          ballY > paddleTopEdgeY &&
+          ballY < paddleBottomEdgeY &&
+          ballX  > paddleLeftEdgeX &&
+          ballX  < paddleRightEdgeX
+        ) { 
+          ballSpeedY *= -1;
         }
+        
       }
 
       function drawAll() {
         colorRect(0, 0, canvas.width, canvas.height, "black");
-        colorRect(paddleX, paddleY, PADDLE_WIDTH, PADDLE_THICKNESS, "white");
+        colorRect(paddleX, canvas.height - PADDLE_DIST_FROM_EDGE, PADDLE_WIDTH, PADDLE_THICKNESS, "white");
         colorBall(ballX, ballY, "white");
       }
 

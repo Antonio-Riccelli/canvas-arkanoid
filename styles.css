@@ -4,5 +4,15 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background-image: url("./bg1.jpg");
+    /* https://www.freepik.com/free-vector/planets-outer-space-with-satellites-meteors-illustration_6690897.htm#query=cartoon%20space&position=0&from_view=keyword - Image by vectorpouch on Freepik*/
+    background-repeat: no-repeat;
+    background-size: cover;
+
+}
+
+#gameCanvas {
+    border: 2px solid white;
+    border-radius: 5px;
 }
 
