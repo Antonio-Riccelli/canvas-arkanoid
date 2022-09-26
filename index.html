@@ -76,12 +76,13 @@
         const paddleRightEdgeX = paddleLeftEdgeX + PADDLE_WIDTH;
 
         if (
-          ballY > paddleTopEdgeY &&
-          ballY < paddleBottomEdgeY &&
-          ballX  > paddleLeftEdgeX &&
-          ballX  < paddleRightEdgeX
+          ballY >= paddleTopEdgeY - 5 &&
+          ballY <= paddleBottomEdgeY + 5 &&
+          ballX  >= paddleLeftEdgeX - 10 &&
+          ballX  <= paddleRightEdgeX + 10
         ) { 
           ballSpeedY *= -1;
+          
         }
         
       }
