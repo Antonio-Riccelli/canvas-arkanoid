@@ -13,8 +13,8 @@
     <script>
       let ballX = 400;
       let ballY = 300;
-      let ballSpeedX = 15;
-      let ballSpeedY = 15;
+      let ballSpeedX = 20;
+      let ballSpeedY = 20;
       const PADDLE_WIDTH = 90;
       const PADDLE_THICKNESS = 10;
       let paddleX = 360;
@@ -66,9 +66,13 @@
           ballSpeedX = -ballSpeedX;
         };
         // IF BALL GOES BEYOND UP/DOWN BORDER, RESET
-        if (ballY > canvas.height || ballY < 0) {
+        if (ballY >= canvas.height ) {
             ballReset();
         };
+
+        if (ballY <= 0) {
+          ballSpeedY *= -1;
+        }
 
         const paddleTopEdgeY = canvas.height - PADDLE_DIST_FROM_EDGE;
         const paddleBottomEdgeY = paddleTopEdgeY + PADDLE_THICKNESS;
@@ -82,7 +86,9 @@
           ballX  <= paddleRightEdgeX + 10
         ) { 
           ballSpeedY *= -1;
-          
+          const centerOfPaddleX = paddleX + (PADDLE_WIDTH/2);
+          let ballDistFromPaddleCenterX = ballX - centerOfPaddleX;
+          ballSpeedX = ballDistFromPaddleCenterX * 0.45;
         }
         
       }
