@@ -13,15 +13,21 @@
     <script>
       let ballX = 400;
       let ballY = 300;
-      let ballSpeedX = 20;
-      let ballSpeedY = 20;
+      let ballSpeedX = 10;
+      let ballSpeedY = 10;
       const PADDLE_WIDTH = 90;
       const PADDLE_THICKNESS = 10;
       let paddleX = 360;
       // let paddleY = 600 - 40;
       let canvas, canvasContext;
       let PADDLE_DIST_FROM_EDGE = 60;
+      let showingStartScreen = true;
 
+      const BRICK_W = 100;
+      const BRICK_H = 50;
+      const BRICK_COUNT = 7;
+      const BRICK_ROWS = 8;
+      const brickGrid = new Array(BRICK_COUNT);
 
       function calculateMousePos(e) {
         const rect = canvas.getBoundingClientRect();
@@ -47,6 +53,11 @@
         setInterval(updateAll, 1000 / framesPerSecond);
 
         canvas.addEventListener("mousemove", updateMousePosition);
+        canvas.addEventListener("mousedown", () => {
+          if (showingStartScreen) {
+            showingStartScreen = false;
+          }
+        });
       };
 
       function updateAll() {
@@ -57,6 +68,11 @@
       ////////////////////////////////////////////////
 
       function moveAll() {
+        if (showingStartScreen) {
+          console.log("Return");
+          return;
+        }
+
         // INCREASE X/Y COORDINATES
         ballX += ballSpeedX;
         ballY += ballSpeedY;
@@ -64,11 +80,11 @@
         // IF BALL GOES BEYOND LEFT/RIGHT BORDER, REVERSE DIRECTION
         if (ballX > canvas.width || ballX < 0) {
           ballSpeedX = -ballSpeedX;
-        };
+        }
         // IF BALL GOES BEYOND UP/DOWN BORDER, RESET
-        if (ballY >= canvas.height ) {
-            ballReset();
-        };
+        if (ballY >= canvas.height) {
+          ballReset();
+        }
 
         if (ballY <= 0) {
           ballSpeedY *= -1;
@@ -82,20 +98,32 @@
         if (
           ballY >= paddleTopEdgeY - 5 &&
           ballY <= paddleBottomEdgeY + 5 &&
-          ballX  >= paddleLeftEdgeX - 10 &&
-          ballX  <= paddleRightEdgeX + 10
-        ) { 
+          ballX >= paddleLeftEdgeX - 10 &&
+          ballX <= paddleRightEdgeX + 10
+        ) {
           ballSpeedY *= -1;
-          const centerOfPaddleX = paddleX + (PADDLE_WIDTH/2);
+          const centerOfPaddleX = paddleX + PADDLE_WIDTH / 2;
           let ballDistFromPaddleCenterX = ballX - centerOfPaddleX;
           ballSpeedX = ballDistFromPaddleCenterX * 0.45;
         }
-        
       }
 
       function drawAll() {
+        if (showingStartScreen) {
+          drawStartScreen();
+          return;
+        }
+        brickReset();
         colorRect(0, 0, canvas.width, canvas.height, "black");
-        colorRect(paddleX, canvas.height - PADDLE_DIST_FROM_EDGE, PADDLE_WIDTH, PADDLE_THICKNESS, "white");
+        drawBricks();
+
+        colorRect(
+          paddleX,
+          canvas.height - PADDLE_DIST_FROM_EDGE,
+          PADDLE_WIDTH,
+          PADDLE_THICKNESS,
+          "white"
+        );
         colorBall(ballX, ballY, "white");
       }
 
@@ -113,11 +141,46 @@
         canvasContext.fill();
       }
 
-      function ballReset(){
+      function ballReset() {
         ballSpeedY = 5;
-          ballSpeedX = 5;
-          ballX = 400;
-          ballY = 300;
+        ballSpeedX = 5;
+        ballX = 400;
+        ballY = 300;
+      }
+
+      function drawStartScreen() {
+        canvasContext.fillStyle = "black";
+        canvasContext.fillRect(0, 0, canvas.width, canvas.height, "black");
+        canvasContext.fillStyle = "white";
+        canvasContext.font = "50px monospace";
+        canvasContext.fillText(
+          "Arkanoid",
+          canvas.width / 2 - 120,
+          canvas.height / 2 - 30
+        );
+        canvasContext.font = "30px monospace";
+        canvasContext.fillText(
+          "Click to play",
+          canvas.width / 2 - 120,
+          canvas.height / 2 + 50
+        );
+      }
+
+      function drawBricks() {
+        let y = 25;
+
+        for (let i = 0; i < BRICK_ROWS; i++) {
+          brickGrid.forEach((brick, index) => {
+            colorRect(BRICK_W * index + 50, y, 95, 25, "blue");
+          });
+          y += 35;
+        }
+      }
+
+      function brickReset() {
+        for (let i = 0; i < BRICK_COUNT; i++) {
+          brickGrid[i] = true;
+        }
       }
     </script>
   </body>
