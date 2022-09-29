@@ -25,9 +25,10 @@
 
       const BRICK_W = 100;
       const BRICK_H = 50;
-      const BRICK_COUNT = 7;
-      const BRICK_ROWS = 8;
-      const brickGrid = new Array(BRICK_COUNT);
+      const BRICK_COLUMNS = 7;
+      const BRICK_ROWS = 10;
+      const brickGrid = new Array(BRICK_COLUMNS * BRICK_ROWS);
+     
 
       function calculateMousePos(e) {
         const rect = canvas.getBoundingClientRect();
@@ -61,8 +62,10 @@
       };
 
       function updateAll() {
+        
         moveAll();
         drawAll();
+        
       }
 
       ////////////////////////////////////////////////
@@ -114,8 +117,10 @@
           return;
         }
         brickReset();
+        
         colorRect(0, 0, canvas.width, canvas.height, "black");
         drawBricks();
+        
 
         colorRect(
           paddleX,
@@ -168,17 +173,31 @@
 
       function drawBricks() {
         let y = 25;
+        let x = 45;
 
-        for (let i = 0; i < BRICK_ROWS; i++) {
-          brickGrid.forEach((brick, index) => {
-            colorRect(BRICK_W * index + 50, y, 95, 25, "blue");
-          });
-          y += 35;
-        }
+        brickGrid.forEach((brick, index, array) => {
+          if (brick) {
+            colorRect(x, y, 95, 25, "blue");
+            canvasContext.fillStyle = "red";
+            canvasContext.fillText(`${index}`, x , y + 20);
+
+            if ((index + 1) % 7 === 0) {
+              y += 35;
+              x = 45;
+            } else {
+              x += BRICK_W;
+            } // end of else block
+          } // end of first if block
+          else {
+            x += BRICK_W;
+          }
+        }); // end of forEach
+        // console.log(brickGrid);
+        
       }
 
       function brickReset() {
-        for (let i = 0; i < BRICK_COUNT; i++) {
+        for (let i = 0; i < brickGrid.length; i++) {
           brickGrid[i] = true;
         }
       }
